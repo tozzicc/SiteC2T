@@ -11,11 +11,17 @@ Esta documentação descreve a configuração da fundação do painel administra
 Crie `.env.local` na raiz do projeto:
 
 ```env
-VITE_SUPABASE_URL=https://seu-projeto.supabase.co
-VITE_SUPABASE_ANON_KEY=sua-chave-anon-publica
+VITE_SUPABASE_URL=https://vppzptwrddhxnxidsoho.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=sua-chave-publishable-publica
+# Opcional e legado: usado somente se a chave publishable estiver vazia
+VITE_SUPABASE_ANON_KEY=
 ```
 
-Sem essas duas variáveis, o site público continua funcionando e o painel informa que o Supabase não está configurado.
+Sem uma URL e uma chave pública válidas, o site público continua funcionando e o painel informa que o Supabase não está configurado.
+
+A aplicação prioriza `VITE_SUPABASE_PUBLISHABLE_KEY` e usa `VITE_SUPABASE_ANON_KEY` apenas como compatibilidade legada. Preencha a chave pública manualmente; não invente chaves e nunca use `service_role` ou uma secret key no frontend.
+
+Após alterar `.env.local`, reinicie o servidor Vite. Esta configuração local não executa migrations, cria administradores nem inicia a ET-07.
 
 ## 2. Criar a tabela de autorização
 
