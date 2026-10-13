@@ -1,0 +1,4 @@
+import { ArrowUpRight, Check } from 'lucide-react'
+import { SectionHeading } from '../components/SectionHeading'
+
+export function About() { return <section id="sobre" className="section about-section"><div className="container about-layout"><SectionHeading eyebrow="Sobre a C2T" title="Construímos o digital com clareza." description="A C2T Tecnologia desenvolve soluções digitais voltadas à modernização de processos, produtividade e eficiência operacional." /><div className="about-panel"><div className="about-panel-mark">C2T<span>+</span></div><div className="about-lines" /><div className="about-panel-footer"><span>tecnologia aplicada</span><ArrowUpRight size={18} /></div></div><div className="about-points"><div><Check size={17} /><span>Olhar próximo para cada desafio</span></div><div><Check size={17} /><span>Base técnica para decisões melhores</span></div><div><Check size={17} /><span>Soluções prontas para evoluir</span></div></div></div></section> }

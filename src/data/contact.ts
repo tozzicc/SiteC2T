@@ -1,0 +1,1 @@
+export const contactSubjects = ['Desenvolvimento de Sistemas', 'Sistemas Personalizados', 'Automação de Processos', 'Consultoria em TI', 'Chamado TI', 'Agenda', 'Gestão de Projetos', 'Outros'] as const
