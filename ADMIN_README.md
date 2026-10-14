@@ -71,4 +71,29 @@ npm run build
 npm run lint
 ```
 
-As áreas de Projetos, Imagens, Serviços, Contatos e Configurações aparecem como módulos futuros e permanecem desabilitadas nesta etapa.
+## ET-07 — gerenciamento administrativo de projetos
+
+O módulo administrativo está disponível em `/admin/projetos` e usa a tabela `public.projects`, separada do catálogo público estático em `src/data/content.ts`. A migration `supabase/migrations/202610130001_create_projects.sql` deve ser revisada e executada manualmente no SQL Editor do Supabase; ela não é executada pela aplicação.
+
+Enquanto a migration não estiver ativa, o painel informa que a tabela de projetos ainda não foi criada. Nenhum projeto público existente é migrado ou alterado nesta etapa.
+
+## ET-08 — gerenciamento de imagens
+
+O gerenciamento administrativo está disponível em `/admin/imagens` e também pelo detalhe de cada projeto. As migrations `supabase/migrations/202610130002_create_project_images_storage.sql` e `supabase/migrations/202610130003_create_project_images.sql` criam o bucket público `project-images`, a tabela `public.project_images` e suas policies. Elas devem ser revisadas e executadas manualmente no SQL Editor; a aplicação não executa migrations.
+
+O bucket aceita somente JPEG, PNG e WebP de até 5 MB. Ele é público: qualquer arquivo enviado pode ser acessado por URL direta, independentemente do status do projeto; as policies RLS não impedem esse acesso direto. Envie somente imagens destinadas à divulgação pública. Upload, substituição e exclusão pela aplicação exigem um usuário presente em `public.admin_users`. Não armazene imagens confidenciais nesse bucket.
+
+O fluxo envia o arquivo com um caminho UUID organizado por projeto, grava os metadados e remove o upload quando o INSERT falha. Na exclusão, o registro é removido antes do arquivo para evitar referências quebradas; se a remoção do Storage falhar, o painel informa a pendência. A substituição mantém o arquivo antigo até a nova imagem estar vinculada.
+
+Para testar manualmente após executar as migrations: selecione um projeto em `/admin/imagens`, envie uma imagem válida, defina capa, altere alt text/ordem, substitua e remova a imagem. As galerias públicas existentes em `src/data/content.ts` não são migradas nesta etapa.
+
+Imagens, Serviços, Contatos e Configurações permanecem como módulos futuros e desabilitados nesta etapa; Projetos está disponível em `/admin/projetos`.
+## ET-09 — serviços, contatos e configurações
+
+O módulo de serviços está disponível em `/admin/servicos`. A migration `supabase/migrations/202610130004_create_services.sql` deve ser revisada e executada manualmente no SQL Editor; a aplicação não executa migrations. O CRUD administrativo aceita os status `draft`, `published` e `archived`, preserva `published_at` ao despublicar e usa somente nomes de ícones Lucide previamente aprovados. A leitura pública, quando integrada em etapa futura, ficará restrita a serviços publicados; esta etapa não altera o catálogo público.
+
+O módulo `/admin/configuracoes` grava a linha singleton `id = 1` de `public.site_settings`, criada pela migration `supabase/migrations/202610130005_create_site_settings.sql` com `C2T Tecnologia` e `Tecnologia que simplifica`. Campos opcionais vazios são enviados como `NULL`; e-mail, WhatsApp e links HTTPS são validados no painel. Não foram incluídos segredos, senhas, chaves privadas ou `service_role`.
+
+O módulo `/admin/contatos` é somente informativo: exibe os canais configurados e direciona a edição para Configurações. Nenhum formulário público ou integração de mensagens foi criado nesta etapa. As policies RLS exigem um usuário presente em `public.admin_users` para operações administrativas; usuários anônimos podem somente ler os dados públicos previstos pelas migrations.
+
+Após revisar e executar manualmente as migrations no Supabase, reinicie o Vite e valide o fluxo autenticado em `/admin/servicos`, `/admin/contatos` e `/admin/configuracoes`. A ET-10 permanece pendente.

@@ -7,6 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint . --report-unused-disable-directives",
+    "test:project-images": "node --experimental-strip-types --test tests/project-image-validation.test.ts",
+    "test:project-urls": "node --experimental-strip-types --test tests/project-url-normalization.test.ts",
+    "test:service-validation": "node --experimental-strip-types --test tests/service-validation.test.ts",
+    "test:site-settings": "node --experimental-strip-types --test tests/site-settings-validation.test.ts",
     "preview": "vite preview"
   },
   "dependencies": {
