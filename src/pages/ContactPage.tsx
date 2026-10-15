@@ -5,6 +5,7 @@ import { siteConfig } from '../config/site'
 import { contactSubjects } from '../data/contact'
 import { getWhatsAppUrl } from '../utils/contact'
 import { setPageSeo } from '../utils/seo'
+import { usePublicSettings } from '../hooks/usePublicCatalog'
 
 type Subject = typeof contactSubjects[number]
 type FormState = { name: string; email: string; phone: string; subject: Subject; message: string; consent: boolean; website: string }
@@ -15,6 +16,7 @@ const defaultForm: FormState = { name: '', email: '', phone: '', subject: 'Desen
 const isSubject = (value: string): value is Subject => contactSubjects.includes(value as Subject)
 
 export function ContactPage() {
+  const settings = usePublicSettings()
   const [searchParams] = useSearchParams()
   const requestedSubject = searchParams.get('assunto') ?? ''
   const initialSubject = isSubject(requestedSubject) ? requestedSubject : defaultForm.subject
@@ -45,11 +47,11 @@ export function ContactPage() {
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) { setSubmitState({ type: 'idle' }); return }
     if (form.website) { setSubmitState({ type: 'error', message: 'Não foi possível enviar a solicitação.' }); return }
-    if (!siteConfig.formEndpoint || !/^https:\/\//.test(siteConfig.formEndpoint)) { setSubmitState({ type: 'error', message: 'O formulário está temporariamente indisponível. Entre em contato pelo WhatsApp, quando disponível, ou tente novamente mais tarde.' }); return }
+    if (!settings?.form_endpoint || !/^https:\/\//.test(settings.form_endpoint)) { setSubmitState({ type: 'error', message: 'O formulário está temporariamente indisponível. Tente novamente mais tarde.' }); return }
 
     setSubmitState({ type: 'loading' })
     try {
-      const response = await fetch(siteConfig.formEndpoint, { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify({ name: form.name.trim(), email: form.email.trim(), phone: form.phone.trim(), subject: form.subject, message: form.message.trim(), consent: form.consent }) })
+      const response = await fetch(settings.form_endpoint, { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify({ name: form.name.trim(), email: form.email.trim(), phone: form.phone.trim(), subject: form.subject, message: form.message.trim(), consent: form.consent }) })
       if (!response.ok) throw new Error('request-failed')
       setForm({ ...defaultForm, subject: initialSubject })
       setErrors({})
