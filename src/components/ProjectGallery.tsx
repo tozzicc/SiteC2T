@@ -8,8 +8,6 @@ export function ProjectGallery({ images, projectName }: Props) {
   const [selected, setSelected] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const hasImages = images.length > 0
-  const current = images[selected]
-
   useEffect(() => {
     if (!lightboxOpen) return
     const onKeyDown = (event: KeyboardEvent) => {
@@ -23,6 +21,8 @@ export function ProjectGallery({ images, projectName }: Props) {
 
   if (!hasImages) return <div className="gallery-empty"><ImageOff size={26} /><span>Imagens do projeto ainda não disponíveis.</span></div>
 
+  const selectedIndex = Math.min(selected, images.length - 1)
+  const current = images[selectedIndex]
   const move = (direction: number) => setSelected((value) => (value + direction + images.length) % images.length)
 
   return <div className="project-gallery">

@@ -11,6 +11,7 @@
     "test:project-urls": "node --experimental-strip-types --test tests/project-url-normalization.test.ts",
     "test:service-validation": "node --experimental-strip-types --test tests/service-validation.test.ts",
     "test:site-settings": "node --experimental-strip-types --test tests/site-settings-validation.test.ts",
+    "test:project-migration": "node --experimental-strip-types --test tests/project-migration-manifest.test.ts",
     "preview": "vite preview"
   },
   "dependencies": {

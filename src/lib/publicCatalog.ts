@@ -8,6 +8,8 @@ import type { ProjectImage } from '../types/projectImage'
 import type { Service } from '../types/service'
 import { supabase } from './supabase'
 import { getPublicProjectImageUrl } from './projectImages'
+import { projectMigrationMode, serviceMigrationMode } from './publicMigrationMode'
+export { projectMigrationMode, serviceMigrationMode } from './publicMigrationMode'
 
 /**
  * Explicit migration switches. `static` keeps the legacy catalog visible until
@@ -15,14 +17,6 @@ import { getPublicProjectImageUrl } from './projectImages'
  * to `supabase` only when its public record is ready. This is intentionally
  * local and public: it never reveals drafts or asks the browser for admin data.
  */
-export const projectMigrationMode: Record<string, 'static' | 'supabase'> = {
-  'chamado-ti': 'static',
-  agenda: 'static',
-  'gestao-de-projetos': 'static',
-}
-
-export const serviceMigrationMode: Record<string, 'static' | 'supabase'> = {}
-
 export type PublicProject = StaticProject
 export type PublicService = StaticService
 
