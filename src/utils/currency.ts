@@ -1,0 +1,2 @@
+export function parseBrl(value: string): number | null { const clean = value.trim().replace(/R\$\s?/g, '').replace(/\./g, '').replace(',', '.'); if (!clean) return null; const parsed = Number(clean); return Number.isFinite(parsed) && parsed >= 0 ? Math.round(parsed * 100) / 100 : null }
+export function formatBrl(value: number | null | undefined) { return value == null ? 'Sob consulta' : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value).replace(/\u00a0/g, ' ') }

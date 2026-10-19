@@ -16,6 +16,13 @@ export function getWhatsAppUrl(context: WhatsAppContext = 'general') {
   return `https://wa.me/${number}?text=${encodeURIComponent(getWhatsAppMessage(context))}`
 }
 
+export function getWhatsAppUrlForPlan(number: string, project: string, plan: string, details?: string) {
+  const normalized = number.replace(/\D/g, '')
+  if (!normalized) return ''
+  const commercialDetails = details ? ` ${details}.` : ''
+  return `https://wa.me/${normalized}?text=${encodeURIComponent(`Olá! Gostaria de solicitar informações sobre o plano ${plan} do projeto ${project} da C2T.${commercialDetails}`)}`
+}
+
 export function getContactUrl(subject?: string) {
   return subject ? `/contato?assunto=${encodeURIComponent(subject)}` : '/contato'
 }

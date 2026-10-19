@@ -12,6 +12,9 @@
     "test:service-validation": "node --experimental-strip-types --test tests/service-validation.test.ts",
     "test:site-settings": "node --experimental-strip-types --test tests/site-settings-validation.test.ts",
     "test:project-migration": "node --experimental-strip-types --test tests/project-migration-manifest.test.ts",
+    "test:project-pricing": "node --experimental-strip-types --test tests/project-pricing.test.ts",
+    "test:project-pricing-security": "node --experimental-strip-types --test tests/project-pricing-security.test.ts",
+    "test:pricing-calculations": "node --experimental-strip-types --test tests/pricing-calculations.test.ts",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -203,3 +203,36 @@ h1 em { color: #5bd6ff; font-style: normal; }
 .projects-section .project-info p { max-width: none; font-family: inherit; font-size: 13px; line-height: 1.65; }
 .projects-section .project-detail-link { min-height: 44px; align-self: flex-end; }
 @media (max-width: 600px) { .projects-section .project-info { align-items: flex-start; }.projects-section .project-detail-link { align-self: stretch; } }
+
+/* ET-11: gestão comercial */
+.commercial-table-wrap { overflow-x: auto; border: 1px solid rgba(151,213,235,.13); background: rgba(13,22,34,.5); }
+.commercial-table { min-width: 900px; }
+.commercial-edit { min-height: 34px; padding: 0 11px; font-size: 10px; }
+.commercial-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 20px; }
+.commercial-form-grid fieldset { min-width: 0; margin: 0; padding: 24px; border: 1px solid rgba(91,214,255,.18); background: rgba(13,22,34,.5); }
+.commercial-form-grid legend { padding: 0 8px; color: #c7dee6; font-size: 14px; font-weight: 700; }
+.commercial-switches { display: flex; flex-wrap: wrap; gap: 14px; color: #a9c2ca; font-size: 11px; }
+.commercial-switches input { accent-color: #5bd6ff; }
+.commercial-form-grid .project-field span { color: #a9c2ca; font-size: 11px; font-weight: 700; }
+.commercial-form-grid .project-field textarea { min-height: 76px; }
+.pricing-section { margin-top: 70px; padding-top: 50px; border-top: 1px solid rgba(151,213,235,.13); }
+.pricing-section h2 { margin-top: 10px; color: #eaf8ff; font-size: clamp(26px, 4vw, 42px); letter-spacing: -.04em; }
+.pricing-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 18px; margin-top: 26px; }
+.pricing-card { display: flex; flex-direction: column; padding: 25px; border: 1px solid rgba(91,214,255,.2); background: linear-gradient(145deg, rgba(16,38,53,.72), rgba(7,15,24,.78)); }
+.pricing-card h3 { margin-top: 9px; color: #eaf8ff; font-size: 22px; }
+.pricing-type { color: #5bd6ff; font-family: 'DM Mono', monospace; font-size: 10px; text-transform: uppercase; }
+.pricing-values { display: grid; grid-template-columns: auto 1fr; align-items: baseline; gap: 4px 10px; margin: 22px 0; }
+.pricing-values strong { color: #eaf8ff; font-size: 24px; }
+.pricing-values span, .pricing-terms { color: #91aab4; font-size: 11px; }
+.pricing-card > p { margin-top: 18px; color: #a7bbc2; font-size: 13px; line-height: 1.7; }
+.pricing-consultation { margin: 22px 0; color: #5bd6ff; font-size: 24px; font-weight: 700; }
+.pricing-card .detail-list { margin-top: 20px; }
+.pricing-card .button { align-self: flex-start; margin-top: auto; }
+.facilitated-values { grid-template-columns: 1fr; gap: 5px; }
+.facilitated-values strong { margin-top: 8px; }
+.pricing-comparison { display: grid; grid-template-columns: auto 1fr 1fr; gap: 10px 18px; align-items: center; margin-top: 28px; padding: 20px; border: 1px solid rgba(91,214,255,.14); background: rgba(91,214,255,.04); }
+.pricing-comparison .eyebrow { grid-column: 1 / -1; }
+.pricing-comparison div { display: grid; gap: 5px; color: #91aab4; font-size: 11px; }
+.pricing-comparison strong { color: #eaf8ff; font-size: 16px; }
+@media (max-width: 800px) { .commercial-form-grid, .pricing-grid { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .commercial-form-grid fieldset { padding: 20px; } .pricing-section { margin-top: 45px; padding-top: 35px; } .pricing-comparison { grid-template-columns: 1fr 1fr; } .pricing-comparison .eyebrow { grid-column: 1 / -1; } }
