@@ -10,5 +10,3 @@ export function firstYearTotal(plan: ProjectPricing) {
   if (plan.introductory_monthly_price == null || plan.introductory_months == null || plan.standard_monthly_price == null) return null
   return Math.round((plan.introductory_monthly_price * Math.min(plan.introductory_months, 12) + plan.standard_monthly_price * Math.max(12 - plan.introductory_months, 0)) * 100) / 100
 }
-
-export function hasCompletePublicValues(plan: ProjectPricing) { return firstYearTotal(plan) != null }

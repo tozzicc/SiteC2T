@@ -15,6 +15,8 @@
     "test:project-pricing": "node --experimental-strip-types --test tests/project-pricing.test.ts",
     "test:project-pricing-security": "node --experimental-strip-types --test tests/project-pricing-security.test.ts",
     "test:pricing-calculations": "node --experimental-strip-types --test tests/pricing-calculations.test.ts",
+    "test:public-content": "node --experimental-strip-types --test tests/public-content.test.ts",
+    "test:public-scroll": "node --experimental-strip-types --test tests/public-scroll.test.ts",
     "preview": "vite preview"
   },
   "dependencies": {

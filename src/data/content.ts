@@ -70,7 +70,7 @@ export const projects: Project[] = [
     id: 'project-chamado-ti', slug: 'chamado-ti', name: 'Chamado TI',
     summary: 'Projeto de catálogo para uma solução de atendimento em tecnologia da informação.',
     description: 'O Chamado TI está catalogado como um projeto da C2T Tecnologia. As informações comerciais e técnicas detalhadas serão adicionadas quando forem disponibilizadas.',
-    problem: 'A definição do problema atendido ainda não foi fornecida para esta etapa.', category: 'Sistemas', technologies: [], features: [],
+    problem: '', category: 'Sistemas', technologies: [], features: [],
     images: [
       image('/projects/chamado-ti/0.png', 'Dashboard do Chamado TI — captura da aplicação', 'screenshot'),
       image('/projects/chamado-ti/1.png', 'Chamado TI — arte promocional', 'promotional'),
@@ -85,7 +85,7 @@ export const projects: Project[] = [
     id: 'project-agenda', slug: 'agenda', name: 'Agenda',
     summary: 'Projeto de catálogo para uma solução de organização e agendamento.',
     description: 'O projeto Agenda está catalogado como uma solução da C2T Tecnologia. A descrição completa será complementada com informações oficiais nas próximas etapas.',
-    problem: 'A definição do problema atendido ainda não foi fornecida para esta etapa.', category: 'Produtividade', technologies: [], features: [],
+    problem: '', category: 'Produtividade', technologies: [], features: [],
     images: [
       image('/projects/agenda/Agenda Online para Bem-Estar - ANUNCIO.png', 'Agenda Online — arte de apresentação', 'promotional'),
       image('/projects/agenda/01 - Escolha de horários no sistema de agendamento.png', 'Agenda Online — escolha de horários, captura da aplicação', 'screenshot'),
@@ -109,7 +109,7 @@ export const projects: Project[] = [
     id: 'project-gestao-projetos', slug: 'gestao-de-projetos', name: 'Gestão de Projetos',
     summary: 'Projeto de catálogo para uma solução voltada à organização de projetos.',
     description: 'O projeto Gestão de Projetos está catalogado como uma solução da C2T Tecnologia. Os detalhes funcionais e técnicos serão adicionados após validação das informações oficiais.',
-    problem: 'A definição do problema atendido ainda não foi fornecida para esta etapa.', category: 'Gestão', technologies: [], features: [],
+    problem: '', category: 'Gestão', technologies: [], features: [],
     images: [
       image('/projects/gestao-de-projetos/capa 1.png', 'Gestão de Projetos — capa de apresentação', 'promotional'),
       image('/projects/gestao-de-projetos/capa 2.png', 'Gestão de Projetos — capa de apresentação alternativa', 'promotional'),

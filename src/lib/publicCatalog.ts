@@ -9,6 +9,7 @@ import type { Service } from '../types/service'
 import { supabase } from './supabase'
 import { getPublicProjectImageUrl } from './projectImages'
 import { projectMigrationMode, serviceMigrationMode } from './publicMigrationMode'
+import { publicOptionalList, publicOptionalText } from './publicContent'
 export { projectMigrationMode, serviceMigrationMode } from './publicMigrationMode'
 
 /**
@@ -30,8 +31,8 @@ function mapProject(row: Project, images: ProjectImage[]): PublicProject {
     .filter((image) => /^https:\/\//.test(image.src))
   return {
     id: row.id, slug: row.slug, name: row.title, summary: row.short_description,
-    description: row.description, problem: row.subtitle || 'Informações sobre o desafio ainda não fornecidas.',
-    category: row.category, technologies: row.technologies, features: row.features, images: dbImages,
+    description: row.description, problem: publicOptionalText(row.subtitle),
+    category: row.category, technologies: publicOptionalList(row.technologies), features: publicOptionalList(row.features), images: dbImages,
     demoUrl: row.demo_url ?? undefined, repoUrl: row.repository_url ?? undefined, status: 'published',
   }
 }
