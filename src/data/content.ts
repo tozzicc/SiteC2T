@@ -17,6 +17,7 @@ export type Project = {
   features: string[]
   images: ProjectImage[]
   demoUrl?: string
+  demoCredentials?: { username: string; password: string }
   repoUrl?: string
   status: ProjectStatus
 }

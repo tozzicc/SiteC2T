@@ -20,7 +20,8 @@ export function ContactPage() {
   const [searchParams] = useSearchParams()
   const requestedSubject = searchParams.get('assunto') ?? ''
   const initialSubject = isSubject(requestedSubject) ? requestedSubject : defaultForm.subject
-  const [form, setForm] = useState<FormState>({ ...defaultForm, subject: initialSubject })
+  const initialMessage = searchParams.get('mensagem') ?? ''
+  const [form, setForm] = useState<FormState>({ ...defaultForm, subject: initialSubject, message: initialMessage.slice(0, 2000) })
   const [errors, setErrors] = useState<FormErrors>({})
   const [submitState, setSubmitState] = useState<SubmitState>({ type: 'idle' })
 

@@ -10,6 +10,7 @@ import { supabase } from './supabase'
 import { getPublicProjectImageUrl } from './projectImages'
 import { projectMigrationMode, serviceMigrationMode } from './publicMigrationMode'
 import { publicOptionalList, publicOptionalText } from './publicContent'
+import { listPublicProjectDemos } from './projectDemos'
 export { projectMigrationMode, serviceMigrationMode } from './publicMigrationMode'
 
 /**
@@ -24,7 +25,7 @@ export type PublicService = StaticService
 function isPublishedProject(row: Project) { return row.status === 'published' }
 function isPublishedService(row: Service) { return row.status === 'published' }
 
-function mapProject(row: Project, images: ProjectImage[]): PublicProject {
+function mapProject(row: Project, images: ProjectImage[], demo?: { demo_username: string; demo_password: string }): PublicProject {
   const dbImages: StaticImage[] = images
     .sort((a, b) => (a.image_type === 'cover' ? -1 : 1) - (b.image_type === 'cover' ? -1 : 1) || a.display_order - b.display_order)
     .map((image) => ({ src: getPublicProjectImageUrl(image.storage_path), alt: image.alt_text, isPlaceholder: false, kind: image.image_type === 'cover' ? ('promotional' as const) : ('screenshot' as const) }))
@@ -33,7 +34,7 @@ function mapProject(row: Project, images: ProjectImage[]): PublicProject {
     id: row.id, slug: row.slug, name: row.title, summary: row.short_description,
     description: row.description, problem: publicOptionalText(row.subtitle),
     category: row.category, technologies: publicOptionalList(row.technologies), features: publicOptionalList(row.features), images: dbImages,
-    demoUrl: row.demo_url ?? undefined, repoUrl: row.repository_url ?? undefined, status: 'published',
+    demoUrl: row.demo_url ?? undefined, demoCredentials: demo ? { username: demo.demo_username, password: demo.demo_password } : undefined, repoUrl: row.repository_url ?? undefined, status: 'published',
   }
 }
 
@@ -42,13 +43,15 @@ function staticProjectForSlug(slug: string) { return staticProjects.find((projec
 export async function loadPublicProjects(): Promise<{ items: PublicProject[]; degraded: boolean }> {
   const fallback = staticProjects.filter((item) => projectMigrationMode[item.slug] !== 'supabase')
   if (!supabase) return { items: fallback, degraded: true }
-  const { data, error } = await supabase.from('projects').select('*').eq('status', 'published').order('display_order').order('title')
+  const { data, error } = await supabase.from('projects').select('id,slug,title,subtitle,short_description,description,category,technologies,features,demo_url,repository_url,status,display_order,created_at,updated_at,published_at').eq('status', 'published').order('display_order').order('title')
   if (error || !data) return { items: fallback, degraded: true }
   const rows = data as Project[]
   const ids = rows.map((row) => row.id)
   const { data: imageRows } = ids.length ? await supabase.from('project_images').select('*').in('project_id', ids).order('display_order') : { data: [] as ProjectImage[] }
   const images = (imageRows ?? []) as ProjectImage[]
-  const dbProjects = rows.filter(isPublishedProject).map((row) => mapProject(row, images.filter((image) => image.project_id === row.id)))
+  const demos = await listPublicProjectDemos(ids)
+  const demoByProject = new Map(demos.map((demo) => [demo.project_id, demo]))
+  const dbProjects = rows.filter(isPublishedProject).map((row) => mapProject(row, images.filter((image) => image.project_id === row.id), demoByProject.get(row.id)))
   const dbBySlug = new Map(dbProjects.map((project) => [project.slug, project]))
   const dbOrder = new Map(rows.map((row, index) => [row.slug, index]))
   const merged = staticProjects.map((item) => dbBySlug.get(item.slug) ?? item).filter((item) => projectMigrationMode[item.slug] !== 'supabase' || dbBySlug.has(item.slug))

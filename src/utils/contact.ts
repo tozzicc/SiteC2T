@@ -24,5 +24,14 @@ export function getWhatsAppUrlForPlan(number: string, project: string, plan: str
 }
 
 export function getContactUrl(subject?: string) {
-  return subject ? `/contato?assunto=${encodeURIComponent(subject)}` : '/contato'
+  const params = new URLSearchParams()
+  if (subject) params.set('assunto', subject)
+  return params.toString() ? `/contato?${params.toString()}` : '/contato'
+}
+
+export function getContactSubject(projectName: string) {
+  if (projectName.toLocaleLowerCase().includes('chamado')) return 'Chamado TI'
+  if (projectName.toLocaleLowerCase().includes('agenda')) return 'Agenda'
+  if (projectName.toLocaleLowerCase().includes('gestão') || projectName.toLocaleLowerCase().includes('gestao')) return 'Gestão de Projetos'
+  return 'Sistemas Personalizados'
 }
