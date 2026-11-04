@@ -1,4 +1,4 @@
-export type PricingType = 'implementation' | 'facilitated_implementation'
+export type PricingType = 'one_time' | 'implementation' | 'facilitated_implementation'
 
 export type ProjectPricing = {
   id: string
@@ -11,6 +11,7 @@ export type ProjectPricing = {
   introductory_monthly_price: number | null
   introductory_months: number | null
   standard_monthly_price: number | null
+  one_time_price: number | null
   included_features: string[]
   commercial_terms: string | null
   support_terms: string | null

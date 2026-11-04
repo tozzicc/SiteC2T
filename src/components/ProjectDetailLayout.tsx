@@ -6,21 +6,17 @@ import type { PublicProject } from '../lib/publicCatalog'
 import { getContactSubject, getContactUrl } from '../utils/contact'
 import { usePublicPricing } from '../hooks/usePublicPricing'
 import { formatBrl } from '../utils/currency'
-import { followingMonth } from '../utils/pricing'
 import type { ProjectPricing } from '../types/projectPricing'
 
 type Props = { project: PublicProject }
 
 function isValidHttpsUrl(value?: string) { if (!value) return false; try { return new URL(value).protocol === 'https:' } catch { return false } }
-function ordinalMonth(value: number | null) { return value == null ? '' : `${value}º mês` }
-
 function PricingCard({ plan, projectName }: { plan: ProjectPricing; projectName: string }) {
   const publicValues = plan.show_price
-  const detail = plan.pricing_type === 'implementation' ? publicValues ? `${formatBrl(plan.setup_price)} de implantação + ${formatBrl(plan.recurring_price)}/mês` : 'Sob consulta' : publicValues ? `Sem entrada · ${formatBrl(plan.introductory_monthly_price)}/mês durante os primeiros ${plan.introductory_months ?? '—'} meses · depois ${formatBrl(plan.standard_monthly_price)}/mês` : 'Sob consulta'
-  const afterMonth = plan.pricing_type === 'facilitated_implementation' ? followingMonth(plan.introductory_months) : null
+  const detail = publicValues ? `${formatBrl(plan.one_time_price)} em pagamento único` : 'Sob consulta'
   const message = `Tenho interesse no plano ${plan.title} do projeto ${projectName}. ${detail}.`
   const contactUrl = `${getContactUrl(getContactSubject(projectName))}&mensagem=${encodeURIComponent(message)}`
-  return <article className="pricing-card"><span className="pricing-type">{plan.pricing_type === 'implementation' ? 'Implantação à vista' : 'Implantação facilitada'}</span><h3>{plan.title}</h3>{publicValues ? plan.pricing_type === 'implementation' ? <div className="pricing-values"><strong>{formatBrl(plan.setup_price)}</strong><span>pagamento único de implantação</span><strong>{formatBrl(plan.recurring_price)}</strong><span>mensalidade recorrente</span></div> : <div className="pricing-values facilitated-values"><strong>Sem entrada</strong><span>implantação não cobrada antecipadamente</span><strong>{formatBrl(plan.introductory_monthly_price)}/mês</strong><span>durante os primeiros {plan.introductory_months ?? '—'} meses</span><strong>{formatBrl(plan.standard_monthly_price)}/mês</strong><span>A partir do {ordinalMonth(afterMonth)}</span></div> : <div className="pricing-consultation">Sob consulta</div>}{plan.description && <p className="pricing-description">{plan.description}</p>}{plan.included_features.length > 0 && <ul className="detail-list">{plan.included_features.map((item) => <li key={item}><Check size={16} />{item}</li>)}</ul>}<Link className="button button-primary" to={contactUrl}>Tenho interesse <ArrowUpRight size={15} /></Link>{(plan.commercial_terms || plan.support_terms) && <details className="pricing-details"><summary>Ver condições comerciais e suporte</summary>{plan.commercial_terms && <p className="pricing-terms">{plan.commercial_terms}</p>}{plan.support_terms && <p className="pricing-terms">Suporte: {plan.support_terms}</p>}</details>}</article>
+  return <article className="pricing-card"><span className="pricing-type">Compra única</span><h3>{plan.title}</h3>{publicValues ? <div className="pricing-values"><strong>{formatBrl(plan.one_time_price)}</strong><span>pagamento único pelo sistema</span></div> : <div className="pricing-consultation">Sob consulta</div>}{plan.description && <p className="pricing-description">{plan.description}</p>}{plan.included_features.length > 0 && <ul className="detail-list">{plan.included_features.map((item) => <li key={item}><Check size={16} />{item}</li>)}</ul>}<button className="button button-primary" type="button" disabled aria-disabled="true" title="A compra online será habilitada em uma próxima etapa">Comprar agora</button><p className="pricing-purchase-note">Compra online em preparação. Fale com a C2T para condições e disponibilidade.</p>{(plan.commercial_terms || plan.support_terms) && <details className="pricing-details"><summary>Ver condições comerciais e suporte</summary>{plan.commercial_terms && <p className="pricing-terms">{plan.commercial_terms}</p>}{plan.support_terms && <p className="pricing-terms">Suporte: {plan.support_terms}</p>}</details>}<Link className="button button-ghost" to={contactUrl}>Falar com a C2T <ArrowUpRight size={15} /></Link></article>
 }
 
 function DemoAccess({ project }: { project: PublicProject }) {

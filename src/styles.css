@@ -231,6 +231,8 @@ h1 em { color: #5bd6ff; font-style: normal; }
 .pricing-consultation { margin: 22px 0; color: #5bd6ff; font-size: 24px; font-weight: 700; }
 .pricing-card .detail-list { margin-top: 20px; }
 .pricing-card .button { align-self: flex-start; margin-top: auto; }
+.pricing-card .button:disabled { cursor: not-allowed; opacity: .55; }
+.pricing-purchase-note { margin-top: 10px; color: #8ca5ae; font-size: 11px; line-height: 1.5; }
 .pricing-details { margin-top: 18px; border-top: 1px solid rgba(151,213,235,.12); padding-top: 14px; }
 .pricing-details summary { color: #91cfe2; cursor: pointer; font-size: 11px; font-weight: 700; }
 .pricing-details summary:focus-visible { outline: 2px solid #5bd6ff; outline-offset: 4px; }
