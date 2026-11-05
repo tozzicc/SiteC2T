@@ -3,7 +3,6 @@ import type { ProjectPricing } from '../types/projectPricing'
 export function followingMonth(months: number | null | undefined) { return months && months > 0 ? months + 1 : null }
 
 export function firstYearTotal(plan: ProjectPricing) {
-  if (plan.pricing_type === 'one_time') return plan.one_time_price
   if (plan.pricing_type === 'implementation') {
     if (plan.setup_price == null || plan.recurring_price == null) return null
     return Math.round((plan.setup_price + plan.recurring_price * 12) * 100) / 100
