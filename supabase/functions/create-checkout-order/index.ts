@@ -85,6 +85,7 @@ Deno.serve(async (request) => {
   if (reservation.code === 'unknown') return fail('O resultado desta tentativa é desconhecido. Não repita a cobrança; aguarde a verificação.', 409, origin, 'checkout_result_unknown')
   if (reservation.code === 'rate_limited') return fail('Muitas tentativas recentes. Aguarde um minuto e tente novamente.', 429, origin, 'rate_limited')
   if (reservation.code === 'ineligible') return fail('A oferta não está disponível para compra.', 409, origin, 'offer_unavailable')
+  if (reservation.code === 'ambiguous_offer') return fail('A oferta de compra precisa de revisão administrativa.', 409, origin, 'offer_ambiguous')
   if (reservation.code !== 'reserved' || !reservation.attempt_id || !reservation.title || typeof reservation.amount !== 'number' || !Number.isFinite(reservation.amount) || reservation.amount <= 0 || reservation.external_reference !== externalReference) return fail('A reserva de checkout é inválida.', 503, origin, 'reservation_invalid')
 
   const amountText = reservation.amount.toFixed(2)

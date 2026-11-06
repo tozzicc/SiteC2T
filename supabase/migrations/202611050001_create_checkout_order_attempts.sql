@@ -39,6 +39,9 @@ create trigger set_checkout_order_attempt_updated_at
 before update on public.checkout_order_attempts
 for each row execute function public.set_checkout_order_attempt_updated_at();
 
+revoke all on function public.set_checkout_order_attempt_updated_at() from public, anon, authenticated;
+grant execute on function public.set_checkout_order_attempt_updated_at() to service_role;
+
 -- Reserva a tentativa, valida a oferta e aplica um limite global atômico.
 -- O lock é apenas transacional e não persiste IP ou outro identificador pessoal.
 create or replace function public.reserve_checkout_order_attempt(
@@ -57,6 +60,7 @@ declare
   offer record;
   attempt public.checkout_order_attempts;
   recent_attempts integer;
+  eligible_offers integer;
 begin
   perform pg_advisory_xact_lock(hashtextextended('c2t-checkout-global-rate-v1', 0));
 
@@ -83,6 +87,25 @@ begin
     end if;
   end if;
 
+  select count(*)::integer
+    into eligible_offers
+    from public.project_pricing pp
+    join public.projects p on p.id = pp.project_id
+   where pp.project_id = p_project_id
+     and pp.pricing_type = 'implementation'
+     and pp.is_active = true
+     and p.status = 'published'
+     and pp.setup_price is not null
+     and pp.setup_price > 0;
+
+  if eligible_offers = 0 then
+    return jsonb_build_object('code', 'ineligible');
+  end if;
+
+  if eligible_offers > 1 then
+    return jsonb_build_object('code', 'ambiguous_offer');
+  end if;
+
   select pp.id, pp.project_id, pp.title, pp.setup_price
     into offer
     from public.project_pricing pp
@@ -93,10 +116,6 @@ begin
      and p.status = 'published'
      and pp.setup_price is not null
      and pp.setup_price > 0;
-
-  if not found then
-    return jsonb_build_object('code', 'ineligible');
-  end if;
 
   select count(*)::integer into recent_attempts
     from public.checkout_order_attempts
