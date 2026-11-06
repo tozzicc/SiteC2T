@@ -224,19 +224,24 @@ h1 em { color: #5bd6ff; font-style: normal; }
 .pricing-card { display: flex; min-width: 0; flex-direction: column; padding: 25px; border: 1px solid rgba(91,214,255,.2); background: linear-gradient(145deg, rgba(16,38,53,.72), rgba(7,15,24,.78)); }
 .pricing-card h3 { margin-top: 9px; color: #eaf8ff; font-size: 22px; }
 .pricing-type { color: #5bd6ff; font-family: 'DM Mono', monospace; font-size: 10px; text-transform: uppercase; }
-.pricing-values { display: grid; grid-template-columns: auto 1fr; align-items: baseline; gap: 4px 10px; margin: 22px 0; }
+.pricing-values { display: grid; grid-template-columns: auto 1fr; align-items: baseline; gap: 4px 10px; margin: 22px 0 0; }
 .pricing-values strong { color: #eaf8ff; font-size: 24px; }
 .pricing-values span, .pricing-terms { color: #91aab4; font-size: 11px; }
 .pricing-card > p { margin-top: 18px; color: #a7bbc2; font-size: 13px; line-height: 1.7; }
 .pricing-consultation { margin: 22px 0; color: #5bd6ff; font-size: 24px; font-weight: 700; }
 .pricing-card .detail-list { margin-top: 20px; }
-.pricing-card .button { align-self: flex-start; margin-top: auto; }
+.pricing-actions { display: flex; min-width: 0; flex: 1; flex-direction: column; margin-top: 28px; }
+.pricing-purchase-form { display: grid; gap: 14px; }
+.pricing-actions .project-field { margin-top: 0; }
+.pricing-actions .button { width: 100%; min-height: 48px; }
+.pricing-actions .button-primary { box-shadow: 0 10px 24px rgba(91, 214, 255, .12); }
 .pricing-card .button:disabled { cursor: not-allowed; opacity: .55; }
-.pricing-purchase-note { margin-top: 10px; color: #8ca5ae; font-size: 11px; line-height: 1.5; }
-.pricing-details { margin-top: 18px; border-top: 1px solid rgba(151,213,235,.12); padding-top: 14px; }
+.pricing-purchase-note { margin-top: 0; color: #8ca5ae; font-size: 11px; line-height: 1.5; }
+.pricing-details { margin-top: 24px; border-top: 1px solid rgba(151,213,235,.12); padding-top: 16px; }
 .pricing-details summary { color: #91cfe2; cursor: pointer; font-size: 11px; font-weight: 700; }
 .pricing-details summary:focus-visible { outline: 2px solid #5bd6ff; outline-offset: 4px; }
 .pricing-details .pricing-terms { margin-top: 12px; }
+.pricing-contact-button { margin-top: 22px; }
 .demo-panel, .customization-panel { display: grid; gap: 22px; margin-top: 55px; padding: 28px; border: 1px solid rgba(91,214,255,.2); background: linear-gradient(145deg, rgba(16,38,53,.68), rgba(7,15,24,.78)); }
 .demo-panel { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
 .demo-panel h2, .customization-panel h2 { margin-top: 10px; color: #eaf8ff; font-size: clamp(26px, 4vw, 40px); letter-spacing: -.04em; }
@@ -254,4 +259,4 @@ h1 em { color: #5bd6ff; font-style: normal; }
 .facilitated-values strong { margin-top: 8px; }
 @media (max-width: 800px) { .commercial-form-grid, .pricing-grid--count-2, .pricing-grid--count-1 { grid-template-columns: 1fr; } .pricing-grid--count-1 { justify-content: stretch; } }
 @media (max-width: 800px) { .demo-panel, .demo-access { grid-template-columns: 1fr; } .demo-panel > .button, .demo-access > .button { justify-self: start; } }
-@media (max-width: 600px) { .commercial-form-grid fieldset { padding: 20px; } .pricing-section { margin-top: 45px; padding-top: 35px; } .demo-panel, .customization-panel { margin-top: 40px; padding: 20px; } }
+@media (max-width: 600px) { .commercial-form-grid fieldset { padding: 20px; } .pricing-section { margin-top: 45px; padding-top: 35px; } .pricing-card { padding: 21px 18px; } .pricing-values { grid-template-columns: 1fr; gap: 6px; } .pricing-values strong { font-size: 23px; } .pricing-actions { margin-top: 25px; } .demo-panel, .customization-panel { margin-top: 40px; padding: 20px; } }
