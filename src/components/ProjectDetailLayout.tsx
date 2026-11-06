@@ -1,5 +1,5 @@
 import { ArrowLeft, ArrowUpRight, Check, Code2, Copy, ExternalLink } from 'lucide-react'
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { ProjectGallery } from './ProjectGallery'
 import type { PublicProject } from '../lib/publicCatalog'
@@ -7,6 +7,7 @@ import { getContactSubject, getContactUrl } from '../utils/contact'
 import { usePublicPricing } from '../hooks/usePublicPricing'
 import { formatBrl } from '../utils/currency'
 import type { ProjectPricing } from '../types/projectPricing'
+import { CheckoutError, createCheckoutOrder, isCheckoutConfigured } from '../lib/checkout'
 
 type Props = { project: PublicProject }
 
@@ -16,10 +17,16 @@ function PricingCard({ plan, projectName }: { plan: ProjectPricing; projectName:
   const publicPrice = isImplementation ? plan.setup_price : plan.introductory_monthly_price
   const hasValidPrice = typeof publicPrice === 'number' && Number.isFinite(publicPrice) && publicPrice >= 0
   const publicValues = plan.show_price && hasValidPrice
+  const [buyerEmail, setBuyerEmail] = useState('')
+  const [checkoutLoading, setCheckoutLoading] = useState(false)
+  const [checkoutError, setCheckoutError] = useState('')
+  const [checkoutBlocked, setCheckoutBlocked] = useState(false)
+  const checkoutApt = isImplementation && plan.is_active && publicValues && isCheckoutConfigured
   const detail = publicValues ? `${formatBrl(publicPrice)} ${isImplementation ? 'em pagamento único' : 'por mês'}` : 'Sob consulta'
   const message = `Tenho interesse no plano ${plan.title} do projeto ${projectName}. ${detail}.`
   const contactUrl = `${getContactUrl(getContactSubject(projectName))}&mensagem=${encodeURIComponent(message)}`
-  return <article className="pricing-card"><span className="pricing-type">{isImplementation ? 'Implantação à vista' : 'Implantação facilitada'}</span><h3>{plan.title}</h3>{publicValues ? <div className="pricing-values"><strong>{formatBrl(publicPrice)}</strong><span>{isImplementation ? 'pagamento único pelo sistema' : 'mensalidade inicial'}</span></div> : <div className="pricing-consultation">Sob consulta</div>}{plan.description && <p className="pricing-description">{plan.description}</p>}{plan.included_features.length > 0 && <ul className="detail-list">{plan.included_features.map((item) => <li key={item}><Check size={16} />{item}</li>)}</ul>}{isImplementation ? <><button className="button button-primary" type="button" disabled aria-disabled="true" title="A compra online será habilitada em uma próxima etapa">Comprar agora</button><p className="pricing-purchase-note">Compra online em preparação. Fale com a C2T para condições e disponibilidade.</p></> : <Link className="button button-primary" to={contactUrl}>{plan.cta_label || 'Solicitar orçamento'} <ArrowUpRight size={15} /></Link>}{(plan.commercial_terms || plan.support_terms) && <details className="pricing-details"><summary>Ver condições comerciais e suporte</summary>{plan.commercial_terms && <p className="pricing-terms">{plan.commercial_terms}</p>}{plan.support_terms && <p className="pricing-terms">Suporte: {plan.support_terms}</p>}</details>}<Link className="button button-ghost" to={contactUrl}>Falar com a C2T <ArrowUpRight size={15} /></Link></article>
+  async function submitCheckout(event: FormEvent<HTMLFormElement>) { event.preventDefault(); if (!checkoutApt || checkoutLoading || checkoutBlocked) return; setCheckoutError(''); setCheckoutLoading(true); try { const result = await createCheckoutOrder(plan.project_id, buyerEmail.trim()); window.location.assign(result.checkout_url) } catch (reason: unknown) { const message = reason instanceof Error ? reason.message : 'Não foi possível iniciar o checkout.'; setCheckoutError(message); if (reason instanceof CheckoutError && !reason.retryable) setCheckoutBlocked(true) } finally { setCheckoutLoading(false) } }
+  return <article className="pricing-card"><span className="pricing-type">{isImplementation ? 'Implantação à vista' : 'Implantação facilitada'}</span><h3>{plan.title}</h3>{publicValues ? <div className="pricing-values"><strong>{formatBrl(publicPrice)}</strong><span>{isImplementation ? 'pagamento único pelo sistema' : 'mensalidade inicial'}</span></div> : <div className="pricing-consultation">Sob consulta</div>}{plan.description && <p className="pricing-description">{plan.description}</p>}{plan.included_features.length > 0 && <ul className="detail-list">{plan.included_features.map((item) => <li key={item}><Check size={16} />{item}</li>)}</ul>}{isImplementation ? <form onSubmit={(event) => void submitCheckout(event)}><label className="project-field" htmlFor={`buyer-email-${plan.id}`}><span>E-mail para o checkout</span><input id={`buyer-email-${plan.id}`} type="email" autoComplete="email" required value={buyerEmail} onChange={(event) => setBuyerEmail(event.target.value)} placeholder="voce@empresa.com.br" /></label><button className="button button-primary" type="submit" disabled={!checkoutApt || checkoutLoading || checkoutBlocked} aria-disabled={!checkoutApt || checkoutLoading || checkoutBlocked} title={checkoutBlocked ? 'Resultado desconhecido: aguarde verificação' : !isCheckoutConfigured ? 'Checkout de teste ainda não configurado' : !publicValues ? 'A oferta não possui preço público válido' : undefined}>{checkoutLoading ? 'Preparando checkout...' : checkoutBlocked ? 'Checkout em verificação' : 'Comprar agora'}</button>{!isCheckoutConfigured && <p className="pricing-purchase-note">Checkout de teste em preparação.</p>}{checkoutError && <p className="admin-alert error" role="alert">{checkoutError}</p>}</form> : <Link className="button button-primary" to={contactUrl}>{plan.cta_label || 'Solicitar orçamento'} <ArrowUpRight size={15} /></Link>}{(plan.commercial_terms || plan.support_terms) && <details className="pricing-details"><summary>Ver condições comerciais e suporte</summary>{plan.commercial_terms && <p className="pricing-terms">{plan.commercial_terms}</p>}{plan.support_terms && <p className="pricing-terms">Suporte: {plan.support_terms}</p>}</details>}<Link className="button button-ghost" to={contactUrl}>Falar com a C2T <ArrowUpRight size={15} /></Link></article>
 }
 
 function DemoAccess({ project }: { project: PublicProject }) {

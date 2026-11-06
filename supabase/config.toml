@@ -1,0 +1,2 @@
+[functions.create-checkout-order]
+verify_jwt = false
