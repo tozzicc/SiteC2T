@@ -6,6 +6,8 @@ const functionSource = readFileSync(new URL('../supabase/functions/create-checko
 const clientSource = readFileSync(new URL('../src/lib/checkout.ts', import.meta.url), 'utf8')
 const migration = readFileSync(new URL('../supabase/migrations/202611050001_create_checkout_order_attempts.sql', import.meta.url), 'utf8')
 const config = readFileSync(new URL('../supabase/config.toml', import.meta.url), 'utf8')
+const webhook = readFileSync(new URL('../supabase/functions/mercado-pago-webhook/index.ts', import.meta.url), 'utf8')
+const statusFunction = readFileSync(new URL('../supabase/functions/get-checkout-status/index.ts', import.meta.url), 'utf8')
 
 test('checkout valida a oferta implementation no banco e usa somente setup_price', () => {
   assert.match(migration, /pricing_type = 'implementation'/i)
@@ -35,5 +37,25 @@ test('checkout não expõe credenciais no frontend e valida o redirect', () => {
 test('função pública desabilita somente o JWT do checkout', () => {
   assert.match(config, /\[functions\.create-checkout-order\]/i)
   assert.match(config, /verify_jwt\s*=\s*false/i)
-  assert.doesNotMatch(config, /\[functions\.(?!create-checkout-order)[^\]]+\]/i)
+  assert.match(config, /\[functions\.mercado-pago-webhook\][\s\S]*verify_jwt\s*=\s*false/i)
+  assert.match(config, /\[functions\.get-checkout-status\][\s\S]*verify_jwt\s*=\s*false/i)
+})
+
+test('confirmação usa assinatura, consulta autenticada e valida os dados da order', () => {
+  assert.match(webhook, /x-signature/i)
+  assert.match(webhook, /x-request-id/i)
+  assert.match(webhook, /HMAC|hmac/i)
+  assert.match(webhook, /v1\/orders/)
+  assert.match(webhook, /external_reference/)
+  assert.match(webhook, /total_paid_amount/)
+  assert.match(webhook, /currency/)
+  assert.match(webhook, /approved/i)
+})
+
+test('consulta pública não expõe dados pessoais nem aceita aprovação do navegador', () => {
+  assert.match(statusFunction, /provider_status/)
+  assert.doesNotMatch(statusFunction, /buyer_email/i)
+  assert.match(statusFunction, /SUPABASE_SERVICE_ROLE_KEY/)
+  assert.match(statusFunction, /external_reference/)
+  assert.match(statusFunction, /mercadopago_order_id/)
 })

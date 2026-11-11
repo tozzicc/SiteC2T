@@ -1,2 +1,8 @@
 [functions.create-checkout-order]
 verify_jwt = false
+
+[functions.mercado-pago-webhook]
+verify_jwt = false
+
+[functions.get-checkout-status]
+verify_jwt = false
